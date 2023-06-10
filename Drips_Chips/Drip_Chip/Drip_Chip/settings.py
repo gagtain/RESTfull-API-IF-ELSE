@@ -83,11 +83,11 @@ WSGI_APPLICATION = 'Drip_Chip.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Drip_Chip',
-        'USER': 'gagtain',
-        'PASSWORD': '13576422',
-        'HOST': 'database',
-        'PORT': '5432'
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': ''
     }
 }
 
