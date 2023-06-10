@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+# Сервис для разворачивания контейнера с базой данных
+
+
+# Сервис для разворачивания контейнера с приложением
+  database:
+    image: postgres:latest
+    volumes:
+      - ./docker/postgres/postgres:/var/lib/postgresql
+    environment:
+    - POSTGRES_DB=Drip_Chip
+    - POSTGRES_USER=gagtain
+    - POSTGRES_PASSWORD=13576422
+    networks: 
+      - forwebapi
+
+  webapi:
+    build: Drip_Chip
+    env_file:
+      - Drip_Chip/.env
+    container_name: webapi
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8080"
+
+    ports:
+        - 8080:8080
+    networks: 
+      - forwebapi
+    depends_on:
+      - database
+
+
+# Сервис для разворачивания контейнера с автотестами
+  tests: 
+    image: mrexpen/planet_olymp_phase1
+    pull_policy: always
+    ports:
+      - "8090:8080"
+    depends_on:
+      - webapi
+    environment:
+      SERVER_URL: http://webapi:8080
+      STAGE: all
+    networks: 
+      - forwebapi
+      # all - запуск всех тестов из трёх доступных этапов
+      # 0, 1 или 2 - запуск тестов для соответствующего этапа
+
+networks:
+  forwebapi:
+    name: forwebapi
+    driver: bridge
